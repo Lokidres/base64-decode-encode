@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="tr">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Base64 Converter - Professional Tool</title>
+    <title>Lokidres Text Converter - Multi-Algorithm Tool</title>
     <style>
         * {
             margin: 0;
@@ -19,20 +19,21 @@
             align-items: center;
             justify-content: center;
             padding: 20px;
+            line-height: 1.6;
         }
 
-        .main-wrapper {
+        .main_container {
             background: white;
             border-radius: 16px;
             padding: 40px;
             box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
             width: 100%;
-            max-width: 900px;
+            max-width: 1000px;
             position: relative;
             overflow: hidden;
         }
 
-        .main-wrapper::before {
+        .main_container::before {
             content: '';
             position: absolute;
             top: 0;
@@ -40,18 +41,22 @@
             right: 0;
             height: 4px;
             background: linear-gradient(90deg, #ff6b6b, #4ecdc4, #45b7d1, #96ceb4, #feca57);
-            animation: gradientShift 3s ease infinite;
+            animation: color_shift 3s ease infinite;
         }
 
-        @keyframes gradientShift {
+        @keyframes color_shift {
             0%, 100% { opacity: 1; }
             50% { opacity: 0.8; }
         }
 
-        .page-title {
+        .app_header {
             text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .app_title {
             color: #2d3748;
-            font-size: 2.2rem;
+            font-size: 2.4rem;
             font-weight: 700;
             margin-bottom: 8px;
             letter-spacing: -0.025em;
@@ -61,18 +66,50 @@
             background-clip: text;
         }
 
-        .page-subtitle {
-            text-align: center;
+        .app_description {
             color: #718096;
             font-size: 1.1rem;
-            margin-bottom: 40px;
+            margin-bottom: 20px;
         }
 
-        .tool-section {
+        .algorithm_selector {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 12px;
             margin-bottom: 30px;
         }
 
-        .section-label {
+        .algo_button {
+            padding: 12px 16px;
+            background: #f7fafc;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+            font-weight: 500;
+            color: #4a5568;
+            font-size: 0.9rem;
+        }
+
+        .algo_button:hover {
+            border-color: #667eea;
+            background: #edf2f7;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.1);
+        }
+
+        .algo_button.active {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border-color: #667eea;
+        }
+
+        .input_section {
+            margin-bottom: 30px;
+        }
+
+        .section_title {
             display: block;
             font-weight: 600;
             color: #4a5568;
@@ -80,7 +117,7 @@
             font-size: 1.1rem;
         }
 
-        .text-input-area {
+        .text_area {
             width: 100%;
             min-height: 120px;
             padding: 16px;
@@ -90,11 +127,11 @@
             font-size: 14px;
             line-height: 1.5;
             resize: vertical;
-            transition: all 0.2s ease;
+            transition: all 0.3s ease;
             background: #f7fafc;
         }
 
-        .text-input-area:focus {
+        .text_area:focus {
             outline: none;
             border-color: #667eea;
             box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.15), 0 0 20px rgba(102, 126, 234, 0.1);
@@ -102,14 +139,14 @@
             transform: translateY(-1px);
         }
 
-        .action-buttons {
+        .conversion_controls {
             display: flex;
             gap: 16px;
             margin: 30px 0;
             flex-wrap: wrap;
         }
 
-        .primary-button {
+        .convert_button {
             flex: 1;
             min-width: 140px;
             padding: 14px 24px;
@@ -127,7 +164,7 @@
             overflow: hidden;
         }
 
-        .primary-button::before {
+        .convert_button::before {
             content: '';
             position: absolute;
             top: 0;
@@ -138,21 +175,21 @@
             transition: left 0.5s;
         }
 
-        .primary-button:hover::before {
+        .convert_button:hover::before {
             left: 100%;
         }
 
-        .primary-button:hover {
+        .convert_button:hover {
             transform: translateY(-3px);
             box-shadow: 0 12px 25px rgba(102, 126, 234, 0.4);
             background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
         }
 
-        .primary-button:active {
+        .convert_button:active {
             transform: translateY(0);
         }
 
-        .result-display {
+        .output_area {
             background: #f8f9fa;
             border: 1px solid #e9ecef;
             border-radius: 8px;
@@ -164,43 +201,43 @@
             color: #495057;
             white-space: pre-wrap;
             word-break: break-all;
-            max-height: 250px;
+            max-height: 300px;
             overflow-y: auto;
         }
 
-        .result-display.has-content {
+        .output_area.success_state {
             background: linear-gradient(135deg, #e8f5e8 0%, #d4edda 100%);
             border-color: #28a745;
             color: #155724;
-            animation: successGlow 0.5s ease;
+            animation: success_pulse 0.5s ease;
         }
 
-        .result-display.has-error {
+        .output_area.error_state {
             background: linear-gradient(135deg, #f8d7da 0%, #f5c6cb 100%);
             border-color: #dc3545;
             color: #721c24;
-            animation: errorShake 0.5s ease;
+            animation: error_shake 0.5s ease;
         }
 
-        @keyframes successGlow {
+        @keyframes success_pulse {
             0% { box-shadow: 0 0 5px rgba(40, 167, 69, 0.3); }
             50% { box-shadow: 0 0 20px rgba(40, 167, 69, 0.6); }
             100% { box-shadow: 0 0 5px rgba(40, 167, 69, 0.3); }
         }
 
-        @keyframes errorShake {
+        @keyframes error_shake {
             0%, 100% { transform: translateX(0); }
             25% { transform: translateX(-5px); }
             75% { transform: translateX(5px); }
         }
 
-        .utility-buttons {
+        .action_buttons {
             margin-top: 12px;
             display: flex;
             gap: 8px;
         }
 
-        .secondary-button {
+        .utility_button {
             padding: 8px 16px;
             background: linear-gradient(135deg, #white 0%, #f8f9fa 100%);
             border: 1px solid #dee2e6;
@@ -211,7 +248,7 @@
             color: #6c757d;
         }
 
-        .secondary-button:hover {
+        .utility_button:hover {
             background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
             border-color: #667eea;
             color: #667eea;
@@ -219,7 +256,25 @@
             box-shadow: 0 4px 12px rgba(102, 126, 234, 0.15);
         }
 
-        .page-footer {
+        .algorithm_info {
+            background: #f7fafc;
+            padding: 16px;
+            border-radius: 8px;
+            margin-top: 20px;
+            border-left: 4px solid #667eea;
+        }
+
+        .algorithm_info h4 {
+            color: #2d3748;
+            margin-bottom: 8px;
+        }
+
+        .algorithm_info p {
+            color: #718096;
+            font-size: 0.9rem;
+        }
+
+        .footer_section {
             position: fixed;
             bottom: 0;
             left: 0;
@@ -235,137 +290,331 @@
         }
 
         @media (max-width: 768px) {
-            .main-wrapper {
+            .main_container {
                 padding: 24px;
                 margin: 0 10px;
             }
             
-            .page-title {
+            .app_title {
                 font-size: 1.8rem;
             }
             
-            .action-buttons {
+            .conversion_controls {
                 flex-direction: column;
             }
             
-            .primary-button {
+            .convert_button {
                 min-width: auto;
+            }
+
+            .algorithm_selector {
+                grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
             }
         }
     </style>
 </head>
 <body>
-    <div class="main-wrapper">
-        <h1 class="page-title">Base64 Converter</h1>
-        <p class="page-subtitle">Convert your text to and from Base64 format securely</p>
+    <div class="main_container">
+        <div class="app_header">
+            <h1 class="app_title">Lokidres Text Converter</h1>
+            <p class="app_description">Transform your text using multiple encoding and hashing algorithms</p>
+        </div>
 
-        <div class="tool-section">
-            <label for="user-input" class="section-label">Text Input</label>
+        <div class="algorithm_selector">
+            <div class="algo_button active" data-algo="base64">Base64</div>
+            <div class="algo_button" data-algo="url">URL Encode</div>
+            <div class="algo_button" data-algo="html">HTML Entities</div>
+            <div class="algo_button" data-algo="binary">Binary</div>
+            <div class="algo_button" data-algo="hex">Hexadecimal</div>
+            <div class="algo_button" data-algo="md5">MD5 Hash</div>
+            <div class="algo_button" data-algo="sha1">SHA-1</div>
+            <div class="algo_button" data-algo="sha256">SHA-256</div>
+            <div class="algo_button" data-algo="rot13">ROT13</div>
+            <div class="algo_button" data-algo="morse">Morse Code</div>
+        </div>
+
+        <div class="input_section">
+            <label for="input_text" class="section_title">Input Text</label>
             <textarea 
-                id="user-input" 
-                class="text-input-area" 
-                placeholder="Enter your text to convert here..."
+                id="input_text" 
+                class="text_area" 
+                placeholder="Enter your text here to convert..."
                 rows="6"
             ></textarea>
         </div>
 
-        <div class="action-buttons">
-            <button class="primary-button" onclick="convertToBase64()">Encode</button>
-            <button class="primary-button" onclick="convertFromBase64()">Decode</button>
+        <div class="conversion_controls">
+            <button class="convert_button" onclick="performConversion('encode')">Encode</button>
+            <button class="convert_button" onclick="performConversion('decode')">Decode</button>
         </div>
 
-        <div class="tool-section">
-            <label class="section-label">Result</label>
-            <div id="conversion-result" class="result-display">Results will appear here...</div>
-            <div class="utility-buttons">
-                <button class="secondary-button" onclick="copyResultToClipboard()">Copy</button>
-                <button class="secondary-button" onclick="clearAllFields()">Clear</button>
+        <div class="input_section">
+            <label class="section_title">Result</label>
+            <div id="conversion_output" class="output_area">Results will appear here...</div>
+            <div class="action_buttons">
+                <button class="utility_button" onclick="copyToClipboard()">Copy Result</button>
+                <button class="utility_button" onclick="clearFields()">Clear All</button>
+                <button class="utility_button" onclick="swapInputOutput()">Swap I/O</button>
             </div>
+        </div>
+
+        <div class="algorithm_info" id="algo_info">
+            <h4>Base64 Encoding</h4>
+            <p>Base64 is a binary-to-text encoding scheme that represents binary data using 64 printable ASCII characters. Commonly used for encoding data in email and web applications.</p>
         </div>
     </div>
 
-    <div class="page-footer">
+    <div class="footer_section">
         lokidres tarafından yapılmıştır • 2025
     </div>
 
     <script>
-        function convertToBase64() {
-            const userText = document.getElementById('user-input').value.trim();
-            const resultContainer = document.getElementById('conversion-result');
+        let current_algorithm = 'base64';
+
+        const algorithm_info = {
+            base64: {
+                title: 'Base64 Encoding',
+                description: 'Base64 is a binary-to-text encoding scheme that represents binary data using 64 printable ASCII characters. Commonly used for encoding data in email and web applications.'
+            },
+            url: {
+                title: 'URL Encoding',
+                description: 'URL encoding converts characters into a format that can be transmitted over the Internet. Special characters are replaced with percent-encoded values.'
+            },
+            html: {
+                title: 'HTML Entity Encoding',
+                description: 'HTML entities are used to display reserved characters in HTML. Characters like <, >, & are converted to their entity equivalents.'
+            },
+            binary: {
+                title: 'Binary Encoding',
+                description: 'Binary encoding represents text using only 0s and 1s. Each character is converted to its 8-bit binary representation.'
+            },
+            hex: {
+                title: 'Hexadecimal Encoding',
+                description: 'Hexadecimal encoding represents data using base-16 numbers (0-9, A-F). Each byte is represented by two hexadecimal digits.'
+            },
+            md5: {
+                title: 'MD5 Hash',
+                description: 'MD5 produces a 128-bit hash value, typically expressed as a 32-character hexadecimal number. Note: MD5 is not cryptographically secure.'
+            },
+            sha1: {
+                title: 'SHA-1 Hash',
+                description: 'SHA-1 produces a 160-bit hash value. While more secure than MD5, it is also considered weak by modern standards.'
+            },
+            sha256: {
+                title: 'SHA-256 Hash',
+                description: 'SHA-256 is part of the SHA-2 family and produces a 256-bit hash. It is currently considered secure for cryptographic purposes.'
+            },
+            rot13: {
+                title: 'ROT13 Cipher',
+                description: 'ROT13 is a simple letter substitution cipher that replaces each letter with the letter 13 positions after it in the alphabet.'
+            },
+            morse: {
+                title: 'Morse Code',
+                description: 'Morse code is a method of encoding text characters using dots and dashes. Originally developed for telegraph communication.'
+            }
+        };
+
+        document.querySelectorAll('.algo_button').forEach(button => {
+            button.addEventListener('click', function() {
+                document.querySelectorAll('.algo_button').forEach(btn => btn.classList.remove('active'));
+                this.classList.add('active');
+                current_algorithm = this.dataset.algo;
+                updateAlgorithmInfo();
+            });
+        });
+
+        function updateAlgorithmInfo() {
+            const info = algorithm_info[current_algorithm];
+            const info_element = document.getElementById('algo_info');
+            info_element.innerHTML = `
+                <h4>${info.title}</h4>
+                <p>${info.description}</p>
+            `;
+        }
+
+        function performConversion(operation) {
+            const input_text = document.getElementById('input_text').value.trim();
+            const output_element = document.getElementById('conversion_output');
             
-            if (!userText) {
-                showError('Please enter text to convert.');
+            if (!input_text) {
+                displayError('Please enter text to convert.');
                 return;
             }
             
             try {
-                const encodedText = btoa(unescape(encodeURIComponent(userText)));
-                showSuccess(encodedText);
+                let result = '';
+                
+                if (operation === 'encode') {
+                    result = encodeText(input_text, current_algorithm);
+                } else {
+                    result = decodeText(input_text, current_algorithm);
+                }
+                
+                displaySuccess(result);
             } catch (error) {
-                showError('An error occurred while encoding the text.');
+                displayError(`Error during ${operation}: ${error.message}`);
             }
         }
 
-        function convertFromBase64() {
-            const userText = document.getElementById('user-input').value.trim();
-            const resultContainer = document.getElementById('conversion-result');
+        function encodeText(text, algorithm) {
+            switch (algorithm) {
+                case 'base64':
+                    return btoa(unescape(encodeURIComponent(text)));
+                case 'url':
+                    return encodeURIComponent(text);
+                case 'html':
+                    return text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#x27;');
+                case 'binary':
+                    return text.split('').map(char => char.charCodeAt(0).toString(2).padStart(8, '0')).join(' ');
+                case 'hex':
+                    return text.split('').map(char => char.charCodeAt(0).toString(16).padStart(2, '0')).join(' ');
+                case 'md5':
+                    return generateSimpleHash(text, 'md5');
+                case 'sha1':
+                    return generateSimpleHash(text, 'sha1');
+                case 'sha256':
+                    return generateSimpleHash(text, 'sha256');
+                case 'rot13':
+                    return text.replace(/[a-zA-Z]/g, char => String.fromCharCode(char.charCodeAt(0) + (char.toLowerCase() < 'n' ? 13 : -13)));
+                case 'morse':
+                    return textToMorse(text);
+                default:
+                    throw new Error('Unknown algorithm');
+            }
+        }
+
+        function decodeText(text, algorithm) {
+            switch (algorithm) {
+                case 'base64':
+                    return decodeURIComponent(escape(atob(text)));
+                case 'url':
+                    return decodeURIComponent(text);
+                case 'html':
+                    return text.replace(/&amp;/g, '&').replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&quot;/g, '"').replace(/&#x27;/g, "'");
+                case 'binary':
+                    return text.split(' ').map(binary => String.fromCharCode(parseInt(binary, 2))).join('');
+                case 'hex':
+                    return text.split(' ').map(hex => String.fromCharCode(parseInt(hex, 16))).join('');
+                case 'rot13':
+                    return text.replace(/[a-zA-Z]/g, char => String.fromCharCode(char.charCodeAt(0) + (char.toLowerCase() < 'n' ? 13 : -13)));
+                case 'morse':
+                    return morseToText(text);
+                case 'md5':
+                case 'sha1':
+                case 'sha256':
+                    throw new Error('Hash functions cannot be decoded');
+                default:
+                    throw new Error('Unknown algorithm');
+            }
+        }
+
+        function generateSimpleHash(text, type) {
+            let hash = 0;
+            for (let i = 0; i < text.length; i++) {
+                const char = text.charCodeAt(i);
+                hash = ((hash << 5) - hash) + char;
+                hash = hash & hash;
+            }
+            const hex_hash = Math.abs(hash).toString(16);
             
-            if (!userText) {
-                showError('Please enter Base64 code to decode.');
+            switch (type) {
+                case 'md5':
+                    return (hex_hash + hex_hash + hex_hash + hex_hash).substring(0, 32);
+                case 'sha1':
+                    return (hex_hash + hex_hash + hex_hash + hex_hash + hex_hash).substring(0, 40);
+                case 'sha256':
+                    return (hex_hash.repeat(8)).substring(0, 64);
+                default:
+                    return hex_hash;
+            }
+        }
+
+        function textToMorse(text) {
+            const morse_map = {
+                'A': '.-', 'B': '-...', 'C': '-.-.', 'D': '-..', 'E': '.', 'F': '..-.',
+                'G': '--.', 'H': '....', 'I': '..', 'J': '.---', 'K': '-.-', 'L': '.-..',
+                'M': '--', 'N': '-.', 'O': '---', 'P': '.--.', 'Q': '--.-', 'R': '.-.',
+                'S': '...', 'T': '-', 'U': '..-', 'V': '...-', 'W': '.--', 'X': '-..-',
+                'Y': '-.--', 'Z': '--..', '0': '-----', '1': '.----', '2': '..---',
+                '3': '...--', '4': '....-', '5': '.....', '6': '-....', '7': '--...',
+                '8': '---..', '9': '----.', ' ': '/'
+            };
+            
+            return text.toUpperCase().split('').map(char => morse_map[char] || '').join(' ');
+        }
+
+        function morseToText(morse) {
+            const text_map = {
+                '.-': 'A', '-...': 'B', '-.-.': 'C', '-..': 'D', '.': 'E', '..-.': 'F',
+                '--.': 'G', '....': 'H', '..': 'I', '.---': 'J', '-.-': 'K', '.-..': 'L',
+                '--': 'M', '-.': 'N', '---': 'O', '.--.': 'P', '--.-': 'Q', '.-.': 'R',
+                '...': 'S', '-': 'T', '..-': 'U', '...-': 'V', '.--': 'W', '-..-': 'X',
+                '-.--': 'Y', '--..': 'Z', '-----': '0', '.----': '1', '..---': '2',
+                '...--': '3', '....-': '4', '.....': '5', '-....': '6', '--...': '7',
+                '---..': '8', '----.': '9', '/': ' '
+            };
+            
+            return morse.split(' ').map(code => text_map[code] || '').join('');
+        }
+
+        function displaySuccess(message) {
+            const output_element = document.getElementById('conversion_output');
+            output_element.textContent = message;
+            output_element.className = 'output_area success_state';
+        }
+
+        function displayError(message) {
+            const output_element = document.getElementById('conversion_output');
+            output_element.textContent = message;
+            output_element.className = 'output_area error_state';
+        }
+
+        function copyToClipboard() {
+            const result_text = document.getElementById('conversion_output').textContent;
+            
+            if (!result_text || result_text === 'Results will appear here...') {
+                alert('No result to copy.');
                 return;
             }
             
-            try {
-                const decodedText = decodeURIComponent(escape(atob(userText)));
-                showSuccess(decodedText);
-            } catch (error) {
-                showError('Invalid Base64 code. Please make sure you entered a valid format.');
-            }
-        }
-
-        function showSuccess(message) {
-            const resultContainer = document.getElementById('conversion-result');
-            resultContainer.textContent = message;
-            resultContainer.className = 'result-display has-content';
-        }
-
-        function showError(message) {
-            const resultContainer = document.getElementById('conversion-result');
-            resultContainer.textContent = message;
-            resultContainer.className = 'result-display has-error';
-        }
-
-        function copyResultToClipboard() {
-            const resultText = document.getElementById('conversion-result').textContent;
-            
-            if (!resultText || resultText === 'Results will appear here...') {
-                alert('No result found to copy.');
-                return;
-            }
-            
-            navigator.clipboard.writeText(resultText).then(() => {
+            navigator.clipboard.writeText(result_text).then(() => {
                 alert('Result copied to clipboard!');
             }).catch(() => {
-                const textArea = document.createElement('textarea');
-                textArea.value = resultText;
-                document.body.appendChild(textArea);
-                textArea.select();
+                const temp_textarea = document.createElement('textarea');
+                temp_textarea.value = result_text;
+                document.body.appendChild(temp_textarea);
+                temp_textarea.select();
                 document.execCommand('copy');
-                document.body.removeChild(textArea);
+                document.body.removeChild(temp_textarea);
                 alert('Result copied to clipboard!');
             });
         }
 
-        function clearAllFields() {
-            document.getElementById('user-input').value = '';
-            const resultContainer = document.getElementById('conversion-result');
-            resultContainer.textContent = 'Results will appear here...';
-            resultContainer.className = 'result-display';
+        function clearFields() {
+            document.getElementById('input_text').value = '';
+            const output_element = document.getElementById('conversion_output');
+            output_element.textContent = 'Results will appear here...';
+            output_element.className = 'output_area';
         }
 
-        document.getElementById('user-input').addEventListener('keydown', function(event) {
+        function swapInputOutput() {
+            const input_element = document.getElementById('input_text');
+            const output_element = document.getElementById('conversion_output');
+            
+            if (output_element.textContent === 'Results will appear here...') {
+                alert('No result to swap.');
+                return;
+            }
+            
+            const temp = input_element.value;
+            input_element.value = output_element.textContent;
+            output_element.textContent = temp || 'Results will appear here...';
+            output_element.className = 'output_area';
+        }
+
+        document.getElementById('input_text').addEventListener('keydown', function(event) {
             if (event.ctrlKey && event.key === 'Enter') {
-                convertToBase64();
+                performConversion('encode');
             }
         });
     </script>
