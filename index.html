@@ -3,195 +3,371 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Base64 Decode-Encode</title>
+    <title>Base64 Converter - Professional Tool</title>
     <style>
-        :root {
-            --neon-blue: #00f3ff;
-            --neon-purple: #bc13fe;
-            --matrix-green: #0f0;
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
 
         body {
-            background: #0a0a12;
-            color: var(--neon-blue);
-            font-family: 'Segoe UI', system-ui;
-            margin: 0;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
-            display: grid;
-            place-items: center;
-            background-image: 
-                linear-gradient(to right, #ffffff08 1px, transparent 1px),
-                linear-gradient(to bottom, #ffffff08 1px, transparent 1px);
-            background-size: 30px 30px;
-            padding-bottom: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
         }
 
-        .container {
-            width: 90%;
-            max-width: 800px;
-            border: 2px solid var(--neon-blue);
-            padding: 2rem;
-            border-radius: 12px;
-            position: relative;
-            box-shadow: 0 0 50px var(--neon-blue);
-            background: #00050d;
-            margin-top: 20px;
-        }
-
-        .hologram-effect {
-            position: absolute;
+        .main-wrapper {
+            background: white;
+            border-radius: 16px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
             width: 100%;
-            height: 100%;
-            top: 0;
-            left: 0;
-            background: radial-gradient(circle at 50% 50%, 
-                var(--neon-purple) 0%, 
-                transparent 60%);
-            opacity: 0.3;
-            pointer-events: none;
-        }
-
-        h1 {
-            text-align: center;
-            font-size: 2.5rem;
-            margin-bottom: 1.5rem;
-            letter-spacing: 2px;
-        }
-
-        .input-group {
-            margin: 2rem 0;
-        }
-
-        textarea {
-            width: 100%;
-            height: 150px;
-            background: #000000;
-            border: 1px solid var(--neon-blue);
-            color: var(--matrix-green);
-            padding: 1rem;
-            font-family: monospace;
-            resize: vertical;
-            transition: all 0.3s;
-            overflow-wrap: break-word;
-        }
-
-        textarea:focus {
-            outline: none;
-            box-shadow: 0 0 20px var(--neon-blue);
-        }
-
-        .button-container {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 1rem;
-            margin: 2rem 0;
-        }
-
-        button {
-            background: #001122;
-            border: 2px solid var(--neon-blue);
-            color: var(--neon-blue);
-            padding: 1rem;
-            font-size: 1.1rem;
-            cursor: pointer;
-            transition: all 0.3s;
+            max-width: 900px;
             position: relative;
             overflow: hidden;
         }
 
-        button:hover {
-            background: var(--neon-blue);
-            color: #000;
+        .main-wrapper::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #ff6b6b, #4ecdc4, #45b7d1, #96ceb4, #feca57);
+            animation: gradientShift 3s ease infinite;
         }
 
-        .terminal-output {
+        @keyframes gradientShift {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.8; }
+        }
+
+        .page-title {
+            text-align: center;
+            color: #2d3748;
+            font-size: 2.2rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+            letter-spacing: -0.025em;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .page-subtitle {
+            text-align: center;
+            color: #718096;
+            font-size: 1.1rem;
+            margin-bottom: 40px;
+        }
+
+        .tool-section {
+            margin-bottom: 30px;
+        }
+
+        .section-label {
+            display: block;
+            font-weight: 600;
+            color: #4a5568;
+            margin-bottom: 12px;
+            font-size: 1.1rem;
+        }
+
+        .text-input-area {
+            width: 100%;
+            min-height: 120px;
+            padding: 16px;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+            font-size: 14px;
+            line-height: 1.5;
+            resize: vertical;
+            transition: all 0.2s ease;
+            background: #f7fafc;
+        }
+
+        .text-input-area:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.15), 0 0 20px rgba(102, 126, 234, 0.1);
+            background: white;
+            transform: translateY(-1px);
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 16px;
+            margin: 30px 0;
+            flex-wrap: wrap;
+        }
+
+        .primary-button {
+            flex: 1;
+            min-width: 140px;
+            padding: 14px 24px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
             position: relative;
-            padding: 1rem;
-            background: #001100;
-            border: 1px solid var(--matrix-green);
-            margin-top: 1rem;
-            min-height: 50px;
-            color: var(--matrix-green);
-            font-family: monospace;
+            overflow: hidden;
+        }
+
+        .primary-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .primary-button:hover::before {
+            left: 100%;
+        }
+
+        .primary-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 25px rgba(102, 126, 234, 0.4);
+            background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+        }
+
+        .primary-button:active {
+            transform: translateY(0);
+        }
+
+        .result-display {
+            background: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 8px;
+            padding: 20px;
+            min-height: 80px;
+            font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+            font-size: 14px;
+            line-height: 1.6;
+            color: #495057;
             white-space: pre-wrap;
-            overflow-wrap: break-word;
-            max-height: 300px;
+            word-break: break-all;
+            max-height: 250px;
             overflow-y: auto;
         }
 
-        footer {
+        .result-display.has-content {
+            background: linear-gradient(135deg, #e8f5e8 0%, #d4edda 100%);
+            border-color: #28a745;
+            color: #155724;
+            animation: successGlow 0.5s ease;
+        }
+
+        .result-display.has-error {
+            background: linear-gradient(135deg, #f8d7da 0%, #f5c6cb 100%);
+            border-color: #dc3545;
+            color: #721c24;
+            animation: errorShake 0.5s ease;
+        }
+
+        @keyframes successGlow {
+            0% { box-shadow: 0 0 5px rgba(40, 167, 69, 0.3); }
+            50% { box-shadow: 0 0 20px rgba(40, 167, 69, 0.6); }
+            100% { box-shadow: 0 0 5px rgba(40, 167, 69, 0.3); }
+        }
+
+        @keyframes errorShake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+
+        .utility-buttons {
+            margin-top: 12px;
+            display: flex;
+            gap: 8px;
+        }
+
+        .secondary-button {
+            padding: 8px 16px;
+            background: linear-gradient(135deg, #white 0%, #f8f9fa 100%);
+            border: 1px solid #dee2e6;
+            border-radius: 6px;
+            font-size: 0.875rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: #6c757d;
+        }
+
+        .secondary-button:hover {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border-color: #667eea;
+            color: #667eea;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.15);
+        }
+
+        .page-footer {
             position: fixed;
             bottom: 0;
-            width: 100%;
-            background: #00050d;
-            text-align: center;
-            padding: 10px;
-            border-top: 1px solid var(--neon-blue);
-            color: var(--neon-purple);
-            font-family: monospace;
-        }
-
-        .cyber-border {
-            position: absolute;
-            background: var(--neon-blue);
-            box-shadow: 0 0 15px var(--neon-blue);
-        }
-
-        .cyber-border.top {
-            top: -2px;
             left: 0;
             right: 0;
-            height: 2px;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            text-align: center;
+            padding: 12px;
+            font-size: 0.875rem;
+            color: #667eea;
+            border-top: 1px solid rgba(102, 126, 234, 0.2);
+            font-weight: 500;
         }
 
-        .cyber-border.right {
-            top: 0;
-            right: -2px;
-            width: 2px;
-            bottom: 0;
+        @media (max-width: 768px) {
+            .main-wrapper {
+                padding: 24px;
+                margin: 0 10px;
+            }
+            
+            .page-title {
+                font-size: 1.8rem;
+            }
+            
+            .action-buttons {
+                flex-direction: column;
+            }
+            
+            .primary-button {
+                min-width: auto;
+            }
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="hologram-effect"></div>
-        <div class="cyber-border top"></div>
-        <div class="cyber-border right"></div>
-        
-        <h1>Base64 Decoder/Encoder</h1>
+    <div class="main-wrapper">
+        <h1 class="page-title">Base64 Converter</h1>
+        <p class="page-subtitle">Convert your text to and from Base64 format securely</p>
 
-        <div class="input-group">
-            <textarea id="input" placeholder="Input text to encode/decode..."></textarea>
+        <div class="tool-section">
+            <label for="user-input" class="section-label">Text Input</label>
+            <textarea 
+                id="user-input" 
+                class="text-input-area" 
+                placeholder="Enter your text to convert here..."
+                rows="6"
+            ></textarea>
         </div>
 
-        <div class="button-container">
-            <button onclick="encode()">ENCODE</button>
-            <button onclick="decode()">DECODE</button>
+        <div class="action-buttons">
+            <button class="primary-button" onclick="convertToBase64()">Encode</button>
+            <button class="primary-button" onclick="convertFromBase64()">Decode</button>
         </div>
 
-        <div class="terminal-output" id="output"></div>
+        <div class="tool-section">
+            <label class="section-label">Result</label>
+            <div id="conversion-result" class="result-display">Results will appear here...</div>
+            <div class="utility-buttons">
+                <button class="secondary-button" onclick="copyResultToClipboard()">Copy</button>
+                <button class="secondary-button" onclick="clearAllFields()">Clear</button>
+            </div>
+        </div>
     </div>
 
-    <footer>
+    <div class="page-footer">
         lokidres tarafından yapılmıştır • 2025
-    </footer>
+    </div>
 
     <script>
-        function encode() {
-            const input = document.getElementById('input').value;
-            const encoded = btoa(unescape(encodeURIComponent(input)));
-            document.getElementById('output').innerText = encoded;
-        }
-
-        function decode() {
+        function convertToBase64() {
+            const userText = document.getElementById('user-input').value.trim();
+            const resultContainer = document.getElementById('conversion-result');
+            
+            if (!userText) {
+                showError('Please enter text to convert.');
+                return;
+            }
+            
             try {
-                const input = document.getElementById('input').value;
-                const decoded = decodeURIComponent(escape(atob(input)));
-                document.getElementById('output').innerText = decoded;
-            } catch {
-                alert("Error: Invalid Base64 input!");
+                const encodedText = btoa(unescape(encodeURIComponent(userText)));
+                showSuccess(encodedText);
+            } catch (error) {
+                showError('An error occurred while encoding the text.');
             }
         }
+
+        function convertFromBase64() {
+            const userText = document.getElementById('user-input').value.trim();
+            const resultContainer = document.getElementById('conversion-result');
+            
+            if (!userText) {
+                showError('Please enter Base64 code to decode.');
+                return;
+            }
+            
+            try {
+                const decodedText = decodeURIComponent(escape(atob(userText)));
+                showSuccess(decodedText);
+            } catch (error) {
+                showError('Invalid Base64 code. Please make sure you entered a valid format.');
+            }
+        }
+
+        function showSuccess(message) {
+            const resultContainer = document.getElementById('conversion-result');
+            resultContainer.textContent = message;
+            resultContainer.className = 'result-display has-content';
+        }
+
+        function showError(message) {
+            const resultContainer = document.getElementById('conversion-result');
+            resultContainer.textContent = message;
+            resultContainer.className = 'result-display has-error';
+        }
+
+        function copyResultToClipboard() {
+            const resultText = document.getElementById('conversion-result').textContent;
+            
+            if (!resultText || resultText === 'Results will appear here...') {
+                alert('No result found to copy.');
+                return;
+            }
+            
+            navigator.clipboard.writeText(resultText).then(() => {
+                alert('Result copied to clipboard!');
+            }).catch(() => {
+                const textArea = document.createElement('textarea');
+                textArea.value = resultText;
+                document.body.appendChild(textArea);
+                textArea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textArea);
+                alert('Result copied to clipboard!');
+            });
+        }
+
+        function clearAllFields() {
+            document.getElementById('user-input').value = '';
+            const resultContainer = document.getElementById('conversion-result');
+            resultContainer.textContent = 'Results will appear here...';
+            resultContainer.className = 'result-display';
+        }
+
+        document.getElementById('user-input').addEventListener('keydown', function(event) {
+            if (event.ctrlKey && event.key === 'Enter') {
+                convertToBase64();
+            }
+        });
     </script>
 </body>
 </html>
