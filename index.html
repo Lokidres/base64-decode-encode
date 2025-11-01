@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Base64 decode/encoder</title>
+    <style>
+      body {
+        font-family: 'Segoe UI', sans-serif;
+        display:flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        height: 100vh;
+        background: #121212;
+        color : #fff;
+        margin : 0;
+      }
+
+      textarea {
+
+        width: 300px;
+        height: 100px;
+        margin: 10px 0;
+        padding:10px;
+        border-radius: 8px;
+        border: none;
+        resize: none;
+        font-size: 16px;
+      }
+
+
+      button {
+        margin: 5px;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 16px;
+        background: #1f1f1f ;
+        color: #fff;
+        transition: 0.3s;
+      }
+      button:hover {
+        background: #6200ee;
+      }
+
+    </style>
+   
+
+  </head>
+
+   <body>
+      <h2>Base64 Decoder/Encoder</h2>
+
+      <textarea id="input" placeholder="Buraya metin giriniz..."></textarea>
+      <div>
+        <button onclick="encodeBase64()">Encode</button>
+        <button onclick="decodeBase64()">Decode</button>
+        
+      </div>
+
+      <textarea id="output" placeholder="sonuç..." readonly></textarea>
+
+      <script>
+        function encodeBase64() {
+          const input = document.getElementById('input').value;
+          document.getElementById('output').value = btoa(input)
+        }
+
+        function decodeBase64() {
+          
+          const input= document.getElementById('input').value;
+          try {
+            document.getElementById('output').value = atob(input)
+          } catch {
+            document.getElementById('output').value = 'Geçersiz base64';
+          }
+        }
+      </script>
+    </body>
+</html>
